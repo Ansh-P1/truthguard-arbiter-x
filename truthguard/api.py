@@ -23,7 +23,7 @@ def get_store(seed_if_empty: bool = True) -> Store:
         if _store is None:
             _store = Store()
         if seed_if_empty and not _store.list_documents():
-            pipeline.ingest_seed(_store)
+            pipeline.ingest_seed(_store, trusted=True)
         return _store
 
 

@@ -121,7 +121,7 @@ def _withdrawal_quote(body: str) -> str:
 
 
 def extract_claims(doc: Document, known_slots_of: Optional[dict[str, list[str]]] = None,
-                   allow_gold: bool = True) -> tuple[list[Claim], dict]:
+                   allow_gold: bool = True, prefer_gold: bool = False) -> tuple[list[Claim], dict]:
     """Extract claims for ``doc`` -> ``(claims, info)``.
 
     ``known_slots_of`` maps doc_id -> slots of its stored claims (used for withdrawal claims).
@@ -130,7 +130,7 @@ def extract_claims(doc: Document, known_slots_of: Optional[dict[str, list[str]]]
     """
     info: dict = {"source": None, "dropped": [], "warnings": []}
     raws: Optional[list[dict]] = None
-    if allow_gold and os.environ.get("TG_USE_GOLD") == "1" and gold_for(doc.doc_id):
+    if allow_gold and (prefer_gold or os.environ.get("TG_USE_GOLD") == "1") and gold_for(doc.doc_id):
         info["source"] = "gold"
         raws = [g for g in gold_for(doc.doc_id)]
     else:

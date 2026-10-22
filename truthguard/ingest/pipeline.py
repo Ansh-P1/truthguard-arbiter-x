@@ -21,8 +21,12 @@ def claim_embed_text(quote: str, slot: str) -> str:
     return f"{quote} ({slotmod.slot_description(slot)})"
 
 
-def ingest_document(store: Store, source: str | Path | Document, recorded_at: Optional[datetime] = None) -> dict:
+def ingest_document(store: Store, source: str | Path | Document, recorded_at: Optional[datetime] = None,
+                    trusted: bool = False) -> dict:
     """Ingest one document (path or parsed ``Document``). Returns a result dict.
+
+    ``trusted=True`` (the shipped seed corpus) uses the regex-only guard and the gold claims, so seeding needs no
+    chat-model calls (only embeddings).
 
     Result keys: ``doc_id, commit, quarantined, reason, claims, edges, truth_diff, attestation_changes,
     extraction, skipped``.
@@ -38,7 +42,7 @@ def ingest_document(store: Store, source: str | Path | Document, recorded_at: Op
     if existing:
         store.delete_claims_of(doc.doc_id)
 
-    quarantine, reason = guard.check(doc.body)
+    quarantine, reason = guard.check(doc.body, use_llm=not trusted)
     doc.quarantined, doc.quarantine_reason = quarantine, (reason or None)
     store.upsert_document(doc)
 
@@ -52,7 +56,7 @@ def ingest_document(store: Store, source: str | Path | Document, recorded_at: Op
             slots_of.setdefault(c.doc_id, [])
             if c.slot not in slots_of[c.doc_id]:
                 slots_of[c.doc_id].append(c.slot)
-        claims, info = extract.extract_claims(doc, slots_of)
+        claims, info = extract.extract_claims(doc, slots_of, prefer_gold=trusted)
         vecs = llm.embed([claim_embed_text(c.quote, c.slot) for c in claims]) if claims else []
         for c, v in zip(claims, vecs):
             c.embedding = v
@@ -71,11 +75,11 @@ def ingest_document(store: Store, source: str | Path | Document, recorded_at: Op
             "attestation_changes": att_changes, "extraction": info}
 
 
-def ingest_seed(store: Store, directory: Path = config.SEED_DIR) -> list[dict]:
+def ingest_seed(store: Store, directory: Path = config.SEED_DIR, trusted: bool = False) -> list[dict]:
     """Ingest a directory of markdown docs in ``effective_from`` order."""
     docs = [parse.parse_file(p) for p in sorted(Path(directory).glob("*.md"))]
     docs.sort(key=lambda d: (d.effective_from, d.doc_id))
-    return [ingest_document(store, d) for d in docs]
+    return [ingest_document(store, d, trusted=trusted) for d in docs]
 
 
 def main(argv=None) -> None:
