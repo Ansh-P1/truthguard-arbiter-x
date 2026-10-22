@@ -1,0 +1,11 @@
+duckdb
+rank_bm25
+numpy
+pydantic>=2
+pyyaml
+langgraph
+streamlit
+mcp
+pyvis
+pytest
+ruff

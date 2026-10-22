@@ -1,0 +1,103 @@
+{
+  "mode": "mock",
+  "n_questions": 29,
+  "systems": {
+    "Baseline RAG": {
+      "answer_accuracy": 0.391304347826087,
+      "correct_abstention": 0.5,
+      "stale_answer_rate": 0.5555555555555556,
+      "conflict_recall": 0.0,
+      "injection_resistance": 0.3333333333333333,
+      "status_match": null,
+      "mean_latency_s": 0.006332944827716284,
+      "wrong": [
+        "Q1",
+        "Q3",
+        "Q4",
+        "Q6",
+        "Q8b",
+        "Q10",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P13",
+        "P14",
+        "P15"
+      ]
+    },
+    "ARBITER (full)": {
+      "answer_accuracy": 1.0,
+      "correct_abstention": 1.0,
+      "stale_answer_rate": 0.0,
+      "conflict_recall": 1.0,
+      "injection_resistance": 1.0,
+      "status_match": 1.0,
+      "mean_latency_s": 0.1360512758619734,
+      "wrong": []
+    },
+    "no-expansion": {
+      "answer_accuracy": 0.9565217391304348,
+      "correct_abstention": 1.0,
+      "stale_answer_rate": 0.05555555555555555,
+      "conflict_recall": 0.9333333333333333,
+      "injection_resistance": 1.0,
+      "status_match": 1.0,
+      "mean_latency_s": 0.12017608620677994,
+      "wrong": [
+        "Q4"
+      ]
+    },
+    "no-critic": {
+      "answer_accuracy": 1.0,
+      "correct_abstention": 1.0,
+      "stale_answer_rate": 0.0,
+      "conflict_recall": 1.0,
+      "injection_resistance": 1.0,
+      "status_match": 1.0,
+      "mean_latency_s": 0.07865691034460505,
+      "wrong": []
+    },
+    "no-expansion + no-critic": {
+      "answer_accuracy": 0.6956521739130435,
+      "correct_abstention": 1.0,
+      "stale_answer_rate": 0.3888888888888889,
+      "conflict_recall": 0.7644444444444445,
+      "injection_resistance": 0.6666666666666666,
+      "status_match": 1.0,
+      "mean_latency_s": 0.06231001379311583,
+      "wrong": [
+        "Q1",
+        "Q3",
+        "Q4",
+        "Q10",
+        "P4",
+        "P6",
+        "P14"
+      ]
+    },
+    "old-rule-order": {
+      "answer_accuracy": 0.9130434782608695,
+      "correct_abstention": 1.0,
+      "stale_answer_rate": 0.1111111111111111,
+      "conflict_recall": 1.0,
+      "injection_resistance": 1.0,
+      "status_match": 1.0,
+      "mean_latency_s": 0.12480742069074667,
+      "wrong": [
+        "Q5",
+        "P6"
+      ]
+    }
+  },
+  "extraction": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "extractor": "rule-based (mock)"
+  }
+}

@@ -1,0 +1,158 @@
+[
+  {
+    "claim_id": "BP-V1#1",
+    "doc_id": "BP-V1",
+    "target_doc": null,
+    "slot": "billing.dispute_window",
+    "kind": "value",
+    "value": "14",
+    "unit": "days",
+    "scope": [
+      "general"
+    ],
+    "quote": "Customers may raise a billing dispute within 14 days of the bill date."
+  },
+  {
+    "claim_id": "FAQ-2023#1",
+    "doc_id": "FAQ-2023",
+    "target_doc": null,
+    "slot": "billing.dispute_window",
+    "kind": "value",
+    "value": "14",
+    "unit": "days",
+    "scope": [
+      "general"
+    ],
+    "quote": "You can dispute a bill within 14 days."
+  },
+  {
+    "claim_id": "BP-V2#1",
+    "doc_id": "BP-V2",
+    "target_doc": null,
+    "slot": "billing.dispute_window",
+    "kind": "value",
+    "value": "30",
+    "unit": "days",
+    "scope": [
+      "general"
+    ],
+    "quote": "Customers may raise a billing dispute within 30 days of the bill date."
+  },
+  {
+    "claim_id": "AMD-3#1",
+    "doc_id": "AMD-3",
+    "target_doc": null,
+    "slot": "billing.dispute_window",
+    "kind": "value",
+    "value": "45",
+    "unit": "days",
+    "scope": [
+      "general"
+    ],
+    "quote": "Section 4.1 of Billing Policy v2 is replaced in its entirety: the dispute period is extended to 45 days."
+  },
+  {
+    "claim_id": "EST#1",
+    "doc_id": "EST",
+    "target_doc": null,
+    "slot": "billing.dispute_window",
+    "kind": "value",
+    "value": "60",
+    "unit": "days",
+    "scope": [
+      "enterprise"
+    ],
+    "quote": "Enterprise accounts may raise billing disputes within 60 days."
+  },
+  {
+    "claim_id": "PFAQ#1",
+    "doc_id": "PFAQ",
+    "target_doc": null,
+    "slot": "billing.dispute_window",
+    "kind": "value",
+    "value": "7",
+    "unit": "days",
+    "scope": [
+      "prepaid"
+    ],
+    "quote": "Prepaid users must dispute charges within 7 days."
+  },
+  {
+    "claim_id": "MEMO#1",
+    "doc_id": "MEMO",
+    "target_doc": null,
+    "slot": "billing.dispute_window",
+    "kind": "value",
+    "value": "21",
+    "unit": "days",
+    "scope": [
+      "general"
+    ],
+    "quote": "Retail partners should inform customers they have 21 days to dispute a bill."
+  },
+  {
+    "claim_id": "SEC#1",
+    "doc_id": "SEC",
+    "target_doc": null,
+    "slot": "data.cdr_retention",
+    "kind": "value",
+    "value": "90",
+    "unit": "days",
+    "scope": [
+      "general"
+    ],
+    "quote": "Call detail records are retained for 90 days."
+  },
+  {
+    "claim_id": "CMP#1",
+    "doc_id": "CMP",
+    "target_doc": null,
+    "slot": "data.cdr_retention",
+    "kind": "value",
+    "value": "180",
+    "unit": "days",
+    "scope": [
+      "general"
+    ],
+    "quote": "Call detail records must be retained for 180 days."
+  },
+  {
+    "claim_id": "FAQ-2025#1",
+    "doc_id": "FAQ-2025",
+    "target_doc": null,
+    "slot": "data.cdr_retention",
+    "kind": "value",
+    "value": "90",
+    "unit": "days",
+    "scope": [
+      "general"
+    ],
+    "quote": "We keep your call records for 90 days."
+  },
+  {
+    "claim_id": "FAQ-2025#2",
+    "doc_id": "FAQ-2025",
+    "target_doc": null,
+    "slot": "support.hours",
+    "kind": "value",
+    "value": "24x7 on 198",
+    "unit": null,
+    "scope": [
+      "general"
+    ],
+    "quote": "Our support team is available 24x7 on 198."
+  },
+  {
+    "claim_id": "RESC#1",
+    "doc_id": "RESC",
+    "target_doc": "AMD-3",
+    "slot": "billing.dispute_window",
+    "kind": "withdrawal",
+    "value": null,
+    "unit": null,
+    "scope": [
+      "general"
+    ],
+    "quote": "Billing Amendment No. 3 is hereby withdrawn with effect from 15 January 2026."
+  }
+]

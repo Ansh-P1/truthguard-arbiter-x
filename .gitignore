@@ -1,0 +1,10 @@
+.venv/
+data/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.duckdb
+*.duckdb.wal
+*.pdf
+.claude/
+.streamlit/secrets.toml
