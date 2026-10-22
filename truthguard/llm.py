@@ -31,15 +31,16 @@ class LLMError(RuntimeError):
     pass
 
 
-def _http(url: str, payload: Optional[dict] = None, headers: Optional[dict] = None, timeout: float = 120.0) -> dict:
+def _http(url: str, payload: Optional[dict] = None, headers: Optional[dict] = None, timeout: float = 120.0,
+          retries: int = 4) -> dict:
     data = json.dumps(payload).encode() if payload is not None else None
     req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json", **(headers or {})})
-    for attempt in range(5):
+    for attempt in range(retries + 1):
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:  # noqa: S310 (local/user-configured endpoint)
                 return json.loads(r.read().decode())
         except urllib.error.HTTPError as e:
-            if e.code in (429, 503) and attempt < 4:       # free tiers rate-limit: back off and retry
+            if e.code in (429, 503) and attempt < retries:       # free tiers rate-limit: back off and retry
                 wait = min(60.0, 5.0 * 2 ** attempt)
                 log.warning("HTTP %s from %s; retrying in %.0fs", e.code, url.split("/")[2], wait)
                 time.sleep(wait)
@@ -93,7 +94,7 @@ def chat(prompt: str, system: str = "", schema: Optional[dict] = None, model: Op
         body = {"model": os.environ.get("TG_OPENAI_MODEL", model), "messages": msgs, "temperature": 0}
         if schema:
             body["response_format"] = {"type": "json_object"}
-        return _http(base + "/chat/completions", body, hdr)["choices"][0]["message"]["content"]
+        return _http(base + "/chat/completions", body, hdr, timeout=60, retries=2)["choices"][0]["message"]["content"]
     except Exception as e:  # network / server errors
         raise LLMError(f"chat failed: {e}") from e
 
@@ -156,22 +157,29 @@ def mock_embed(text: str) -> list[float]:
     return [x / n for x in v]
 
 
+_embed_down_until = 0.0
+
+
 def embed(texts: list[str]) -> list[list[float]]:
-    """Embed texts with the configured backend (mock fallback on failure)."""
+    """Embed texts with the configured backend. On failure fall back to mock embeddings, and stop calling the
+    remote endpoint for 5 minutes (circuit breaker) so a throttled free tier cannot stall the app."""
+    global _embed_down_until
     m = mode()
-    if m == "mock":
+    if m == "mock" or time.time() < _embed_down_until:
         return [mock_embed(t) for t in texts]
     try:
         if m == "ollama":
-            r = _http(config.OLLAMA_URL + "/api/embed", {"model": config.EMBED_MODEL, "input": texts})
+            r = _http(config.OLLAMA_URL + "/api/embed", {"model": config.EMBED_MODEL, "input": texts}, timeout=30,
+                      retries=1)
             return r["embeddings"]
         base = os.environ["TG_OPENAI_BASE_URL"].rstrip("/")
         hdr = {"Authorization": "Bearer " + os.environ.get("TG_OPENAI_API_KEY", "")}
         r = _http(base + "/embeddings", {"model": os.environ.get("TG_OPENAI_EMBED_MODEL", config.EMBED_MODEL),
-                                          "input": texts}, hdr)
+                                          "input": texts}, hdr, timeout=20, retries=1)
         return [d["embedding"] for d in r["data"]]
     except Exception as e:
-        log.warning("embed failed (%s); using mock embeddings", e)
+        log.warning("embed failed (%s); using mock embeddings for 5 minutes", e)
+        _embed_down_until = time.time() + 300
         return [mock_embed(t) for t in texts]
 
 
